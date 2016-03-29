@@ -5,35 +5,83 @@
     padding-top: 40px;
 }
 
+/****************************
+ * Map Style
+ */
+
 .map-container {
-    width: 100%;
-    height: 600px;
+    width:  100%;
+    height: 800px;
+    padding: 10px;
 }
 
 .country {
     fill: lightgrey;
 }
-
-.hide {
-    fill: none;
-}
-
 .country:hover {
     fill: darkgray;
 }
 
-path {
-    fill: none;
- 
+.country-hidden {
+    stroke: #777;
+    stroke-width: 1;
+    stroke-dasharray: 1,1;
+    stroke-linejoin: round;
 }
+
+.country.active,
+.country.active:hover {
+    fill: darkgreen;
+}
+
+.country-label {
+  fill: #777;
+  fill-opacity: .5;
+  font-size: 9px;
+  font-weight: 300;
+  text-anchor: middle;
+}
+
+
 .country-boundary {
     stroke: white;
     stroke-width: 1;
 }
 
-.country-boundary.NONEU {
+/*.country-boundary.noneu {
     stroke: #777;
     stroke-dasharray: 2,2;
     stroke-linejoin: round;
-    stroke-width: 1;
+}*/
+
+.city {
+    fill: black;
+    display: none;
 }
+.city-label {
+    font-size: 3px;
+    display: none;
+}
+
+.clusterPoint {
+    fill: orange;
+}
+
+.grid {
+    fill: none;
+    
+    stroke: #777;
+    pointer-events: none;
+}
+
+path {
+    fill: none;
+}
+text {
+    pointer-events: none;
+}
+.hidden {
+    fill: none;
+}
+
+

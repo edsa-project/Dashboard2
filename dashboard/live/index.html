@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="../../common/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../../common/css/jquery-ui.min.css">
     <link rel="stylesheet" type="text/css" href="../../common/css/index.css" />
+    <link rel="stylesheet" type="text/css" href="../../common/css/europe.css" />
     <title>EDSA Dashboard</title>
 </head>
 <body>
@@ -41,7 +42,7 @@
        <!-- Search options -->
        <div class="row">
            <div class="col-lg-12">
-               <h1>Title</h1>
+               <h1>Policy Makers</h1>
            </div>
        </div>
        <div class="row">
@@ -52,8 +53,10 @@
                </div>
            </div>
 
+
+           <!-- Map container -->
            <div class="col-lg-8">
-               <div class="map-container"></div>
+               <div id="map-container"></div>
            </div>
        </div>
 
@@ -61,11 +64,14 @@
 
 
     <!-- Scripts -->
+    <!-- d3js -->
     <script src="../../common/libs/js/ext/d3.min.js" charset="utf-8"></script>
+    <script src="../../common/libs/js/ext/d3.geo.projection.v0.min.js"></script>
+    <script src="../../common/libs/js/ext/topojson.min.js"></script>
+
     <script src="../../common/libs/js/ext/jquery.min.js"></script>
     <script src="../../common/libs/js/ext/bootstrap.min.js"></script>
 
-    <script src="http://d3js.org/topojson.v1.min.js"></script>
     <script src="../../public/js/graphs/europeMap.js"></script>
     <script src="../../dashboard/live/js/index.js"></script>
 </body>

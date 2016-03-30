@@ -1,0 +1,76 @@
+﻿/*********************************
+ * Map style
+ */
+
+.graticule {
+    fill: none;
+    stroke: #777;
+    stroke-width: .5px;
+    stroke-opacity: .5;
+}
+
+.country {
+    fill: #BDD09F;
+    stroke: white;
+    stroke-width: 1px;
+}
+.country:hover {
+    fill: #98B071;
+}
+
+.country-hidden {
+    stroke: #777;
+    stroke-width: .5px;
+    stroke-dasharray: 1, 2;
+}
+
+.country.active,
+.country.active:hover {
+    fill: #668D3C;
+}
+
+.country-label {
+  fill: #493829;
+  fill-opacity: .5;
+  font-size: 9px;
+  font-weight: 300;
+  text-anchor: middle;
+}
+
+
+.country-boundary {
+    stroke: white;
+    stroke-width: 1;
+}
+
+.city {
+    fill: white;
+    stroke: black;
+    stroke-width: .5px;
+    display: none;
+}
+.city-label {
+    font-size: 3.5px;
+    display: none;
+}
+
+path {
+    fill: none;
+}
+
+text,
+.city,
+.graticule {
+    pointer-events: none;
+}
+.hidden {
+    fill: none;
+}
+
+/*********************************
+ * Cluster style TODO
+ */
+
+.clusterPoint {
+    fill: orange;
+}

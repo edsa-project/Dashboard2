@@ -52,9 +52,9 @@ function EuropeMap(_options) {
             'MKD', 'MDA', 'MNE', 'NOR', 'SMR', 'SRB', 'CHE', 'UKR', 'VAT'];
         
         // set the projection function from spherical coords to euclidean
-        projection = d3.geo.mercator()
-                     .center([5, 57.4])
-                     .scale(600)
+        projection = d3.geo.vanDerGrinten()
+                     .center([5, 55])
+                     .scale(800)
                      .translate([width / 2, height / 2]);
         
         // set the path function
@@ -62,7 +62,11 @@ function EuropeMap(_options) {
                .pointRadius(1)
                .projection(projection);
         
+        var graticule = d3.geo.graticule()
+                          .step([10, 10]);
+
         zoom = d3.behavior.zoom()
+                 .scaleExtent([1, 8])
                  .on("zoom", onZoom);
         
         gridScale = d3.scale.linear()
@@ -70,8 +74,15 @@ function EuropeMap(_options) {
                       .rangeRound([options.gridSize.max, options.gridSize.min]);
         
         // the zoom behaviour
+        // it also creates the boundary limits
         function onZoom() {
-            container.attr("transform", "translate(" + d3.event.translate + ")scale(" + scaleKoef + ")");
+            var t = d3.event.translate,
+                s = scaleKoef;
+            var h = height / 4;
+            t[0] = Math.min(width / height * (s - 1), Math.max(width * (1 - s), t[0]));
+            t[1] = Math.min(h * (s - 1) + h / 2 * s, Math.max(height * (1 - s) - h / 2 * s, t[1]));
+            zoom.translate(t);
+            container.attr("transform", "translate(" + t + ")scale(" + s + ")");
         }
         
         // create the svg container
@@ -95,44 +106,34 @@ function EuropeMap(_options) {
         container = svg.append("g");
         
         // load the europe data
-        $.getJSON("dashboard/data/map/europe.json", function (europe) {
-            // d3.json("../data/map/europe.json", function (error, europe) {
-            // if (error) { return console.error(error); }
+        d3.json("dashboard/data/map/europe.json", function (error, europe) {
+             if (error) { throw error; }
             
             // get the countries from the json file
             var countries = topojson.feature(europe, europe.objects.countries);
             var cities = topojson.feature(europe, europe.objects.cities);
-            
-            //container.append("path")
-            //         .datum(countries)
-            //         .attr("d", path);
             
             // set the country features
             container.selectAll(".country")
                      .data(countries.features)
                      .enter().append("path")
                      .attr("class", function (d) {
-                var hidden = nonEU.indexOf(d.id) !== -1 ? "-hidden" : "";
-                return "country" + hidden;
-            })
+                        var hidden = nonEU.indexOf(d.id) !== -1 ? "-hidden" : "";
+                        return "country" + hidden;
+                     })
                      .attr("id", function (d) { return d.id; })
                      .attr("d", path)
                      .on('click', function (d) { zoomOnCountry(d, options.multipleSelection); });
             
-            // remove the hidden countries - we don't need them in the map
-            container.selectAll(".country-hidden").remove();
+            //container.selectAll(".country-hidden").remove();
             
-            // create border paths
-            container.append("path")
-               .datum(topojson.mesh(europe, europe.objects.countries, function (a, b) { return a !== b && nonEU.indexOf(a.id) === -1; }))
-               .attr("d", path)
-               .attr("class", "country-boundary");
-            
-            container.append("path")
-               .datum(topojson.mesh(europe, europe.objects.countries, function (a, b) { nonEU.indexOf(a.id) !== -1; }))
-               .attr("d", path)
-               .attr("class", "country-boundary noneu");
-            
+            // graticule lines 
+            var lines = container.selectAll('.graticule').data([graticule()]);
+            lines.enter().append('path')
+                         .attr('class', 'graticule')
+                         .attr('d', path);
+            lines.exit().remove();
+
             /**
              * Zoom on country function
              * DISCLAMER: change this function for selecting multiple countries 
@@ -146,13 +147,13 @@ function EuropeMap(_options) {
                      * islands around the world and that's why it
                      * doesn't zoom in the center of the country
                      */ 
-                    var addX = d.id == "FRA" ? 30 : 0;
-                    var addY = d.id == "FRA" ? -30 : 0;
+                    var addX = d.id == "FRA" ? 60 : 0;
+                    var addY = d.id == "FRA" ? -50 : 0;
                     
                     var centroid = path.centroid(d);
                     xCoord = centroid[0] + addX;
                     yCoord = centroid[1] + addY;
-                    scaleKoef = 3;
+                    scaleKoef = 2.5;
                     centered = d;
                 } else {
                     xCoord = width / 2;
@@ -237,8 +238,8 @@ function EuropeMap(_options) {
                      .enter().append("text")
                      .attr("class", function (d) { return "country-label " + d.id; })
                      .attr("transform", function (d) {
-                var addX = d.id == "FRA" ?  40 : 0;
-                var addY = d.id == "FRA" ? -40 : 0;
+                var addX = d.id == "FRA" ?  65 : 0;
+                var addY = d.id == "FRA" ? -60 : 0;
                 return "translate(" + (path.centroid(d)[0] + addX) + ", " + (path.centroid(d)[1] + addY) + ")";
             })
                      .attr("dy", ".35em")
@@ -249,27 +250,6 @@ function EuropeMap(_options) {
                     return "";
                 }
             });
-            
-            /**
-             * This part adds the grid used for the point clustering.
-             */  
-
-            //// add the grid on the map
-            //var grid = container.append('g')
-            //                    .attr("class", "grid");
-
-            //for (var xGrid = 0; xGrid <= width; xGrid += options.gridSize.min) {
-            //    for (var yGrid = 0; yGrid <= height; yGrid += options.gridSize.min) {
-            //        grid.append("rect")
-            //            .attr({
-            //            x: xGrid, 
-            //            y: yGrid,
-            //            width: options.gridSize.min,
-            //            height: options.gridSize.min,
-            //            class: "grid"
-            //        });
-            //    }
-            //}
         });
     };
     
@@ -283,36 +263,7 @@ function EuropeMap(_options) {
         var appearMs = 500;
         
         // save the current array of points
-        jsonPoints = _points;
-        
-        //var points = container.selectAll(".point")
-        //        .data(jsonPoints);
-        
-        //// what happens when the points are updated
-        //points.transition().duration(disappearMs)                           // the disappear animation
-        //      .attr("r", "0px")
-        //      .transition().duration(0)                                     // move animation
-        //      .attr("cx", function (d) { return projection(d.coord)[0]; })
-        //      .attr("cy", function (d) { return projection(d.coord)[1]; })
-        //      .transition().duration(appearMs)                              // appear animation
-        //      .attr("r", "1px");
-        
-        //// what happens when the points are added
-        //points.enter().append("circle")
-        //    .attr("cx", function (d) { return projection(d.coord)[0]; })
-        //    .attr("cy", function (d) { return projection(d.coord)[1]; })
-        //    .attr("class", "point")
-        //    .attr("r", "0px")
-        //    .transition().delay(disappearMs)                                // delay for the appear animation for the update points
-        //    .duration(appearMs)
-        //    .attr("r", "2px");
-        
-        //// what happens when the points are removed
-        //points.exit()
-        //    .transition().duration(disappearMs)                             // remove points in the same time as in the update disappear animation
-        //    .attr("r", "0px")
-        //    .remove();
-        
+        jsonPoints = _points; 
         this.PointClustering();
     };
     
@@ -371,9 +322,9 @@ function EuropeMap(_options) {
         // set the radius scale 
         radiusScale = d3.scale.linear()
                         .domain([
-            d3.min(clusterPoints, function (d) { return d[2].length; }),
-            d3.max(clusterPoints, function (d) { return d[2].length; })
-        ])
+                            d3.min(clusterPoints, function (d) { return d[2].length; }),
+                            d3.max(clusterPoints, function (d) { return d[2].length; })
+                        ])
                         .rangeRound([2, 8]);
         
         
@@ -387,8 +338,8 @@ function EuropeMap(_options) {
                  .attr("cy", function (d) { return d[1]; })
                  .attr("r", function (d) { return radiusScale(d[2].length); })
                  .on("click", function (d, i) {
-            console.log(d);
-        });
+                     console.log(d);
+                 });
         clusters.exit().remove();
     };
 }

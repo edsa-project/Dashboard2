@@ -5,12 +5,87 @@
     padding-top: 40px;
 }
 
-/****************************
- * Map Style
- */
-
 #map-container {
     width:  100%;
     height: 800px;
     padding: 10px;
+}
+
+/**********************
+ * Options style
+ */
+
+.options {
+    padding-bottom: 20px;
+}
+
+.additional-options {
+    padding-top: 10px;
+}
+
+.btn.btn-default.dropdown-toggle {
+    width: 100px;
+    display: block;
+    text-align: left !important;
+}
+
+.selected-location,
+.selected-time {
+    width: 60px;
+}
+
+.caret-right {
+    float:right;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-left-color:#999999;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid;
+    margin-top: 8px;
+    margin-right:-5px;
+}
+
+
+/**********************
+ * Scroll style - TODO check if needed
+ */
+
+#info-container {
+    overflow: auto;
+    width: auto;
+    height: 740px;
+}
+
+.tracking {
+    width: 10px;
+    background: rgba(0, 0, 0, 0);
+    margin-right: 2px;
+    border-radius: 10px;
+    -webkit-transition: background 250ms linear;
+    transition: background 250ms linear;
+}
+
+.tracking:hover,
+.tracking.dragging {
+    background: #d9d9d9; 
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.handling {
+    width: 7px;
+    right: 0;
+    background: #999;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 7px;
+    -webkit-transition: width 250ms;
+    transition: width 250ms;
+}
+
+.tracking:hover .handling,
+.tracking.dragging .handling {
+    width: 10px;
 }

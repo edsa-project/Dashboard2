@@ -22,10 +22,10 @@ function toggleAdvOptions() {
     
     // change the size of the info container
     var info_container = $('#info-container');
-    if (info_container.height() != 630) {
-        info_container.animate({ height: 630 }, 500);
+    if (info_container.height() != 625) {
+        info_container.animate({ height: 625 }, 600);
     } else {
-        info_container.animate({ height: 740 }, 500);
+        info_container.animate({ height: 730 }, 700);
     }
 }
 

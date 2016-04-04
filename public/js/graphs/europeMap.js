@@ -156,8 +156,8 @@ function EuropeMap(_options) {
             var t = d3.event.translate,
                 s = scaleKoef;
             var h = height / 4;
-            t[0] = Math.min(width / height * (s - 1), Math.max(width * (1 - s), t[0]));
-            t[1] = Math.min(h * (s - 1) + h / 2 * s, Math.max(height * (1 - s) - h / 2 * s, t[1]));
+            t[0] = Math.min(width / height * (s - 1) + 100*s, Math.max(width * (1 - s) - 100*s, t[0]));
+            t[1] = Math.min(h * (s - 1) + 2*h / 3 * s, Math.max(height * (1 - s) - 2*h / 3 * s, t[1]));
             zoom.translate(t);
             container.attr("transform", "translate(" + t + ")scale(" + s + ")");
         }

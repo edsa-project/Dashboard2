@@ -1,16 +1,4 @@
-﻿
-
-/**
- * Scrollbar functionality
- */ 
-//$('#info-container').enscroll({
-//    showOnHover: false,
-//    scrollIncrement: 50,
-//    verticalTrackClass: 'tracking',
-//    verticalHandleClass: 'handling'
-//})
-
-/**
+﻿/**
  * Advance options functionality:
  * - toggle advance options
  * - selecting Location Aggregate
@@ -54,7 +42,6 @@ $(function () {
         $("#options-time > .dropdown-toggle > .selected-time").val($(this).text());
     })
 });
-
 
 
 

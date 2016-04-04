@@ -35,6 +35,83 @@ function EuropeMap(_options) {
     var scaleKoef = 1;
     
     /**
+     * Alpha-3 to Alpha-2 ISO code (only EU countries)
+     */ 
+    var Alpha3To2 = {
+        'AND': 'AD',    // Andorra
+        'AUT': 'AT',    // Austria
+        'BEL': 'BE',    // Belgium
+        'BGR': 'BG',    // Bulgaria
+        'CYP': 'CY',    // Cyprus
+        'CZE': 'CZ',    // Czech Republic
+        'CHE': 'CH',    // Switzerland
+        'DNK': 'DK',    // Denmark
+        'DEU': 'DE',    // Germany
+        'ESP': 'ES',    // Spain
+        'EST': 'EE',    // Estonia
+        'FIN': 'FI',    // Finland
+        'FRA': 'FR',    // France
+        'GBR': 'GB',    // United Kingdom
+        'GRC': 'GR',    // Greece
+        'HUN': 'HU',    // Hungary
+        'HRV': 'HR',    // Croatia
+        'IRL': 'IE',    // Ireland
+        'ITA': 'IT',    // Italy
+        'LTU': 'LT',    // Lithuania
+        'LUX': 'LU',    // Luxembourg
+        'LVA': 'LV',    // Latvia
+        'MLT': 'MT',    // Malta
+        'NLD': 'NL',    // Netherlands
+        'POL': 'PL',    // Poland
+        'PRT': 'PT',    // Portugal
+        'ROU': 'RO',    // Romania
+        'SMR': 'SM',    // San Marino
+        'UKR': 'UA',    // Ukraine
+        'SVK': 'SK',    // Slovakia
+        'SVN': 'SI',    // Slovenia
+        'VAT': 'VA'     // holy city of Vatican
+    };
+    
+    /**
+     * Alpha-2 to Alpha-3 ISO code (only EU countries)
+     */ 
+    var Alpha2To3 = {
+        'AD': 'AND',    // Andorra
+        'AT': 'AUT',    // Austria
+        'BE': 'BEL',    // Belgium
+        'BG': 'BGR',    // Bulgaria
+        'CY': 'CYP',    // Cyprus
+        'CZ': 'CZE',    // Czech Republic
+        'CH': 'CHE',    // Switzerland
+        'DK': 'DNK',    // Denmark
+        'DE': 'DEU',    // Germany
+        'ES': 'ESP',    // Spain
+        'EE': 'EST',    // Estonia
+        'FI': 'FIN',    // Finland
+        'FR': 'FRA',    // France
+        'GB': 'GBR',    // United Kingdom
+        'GR': 'GRC',    // Greece
+        'HU': 'HUN',    // Hungary
+        'HR': 'HRV',    // Croatia
+        'IE': 'IRL',    // Ireland
+        'IT': 'ITA',    // Italy
+        'LT': 'LTU',    // Lithuania
+        'LU': 'LUX',    // Luxembourg
+        'LV': 'LVA',    // Latvia
+        'MT': 'MLT',    // Malta
+        'NL': 'NLD',    // Netherlands
+        'PL': 'POL',    // Poland
+        'PT': 'PRT',    // Portugal
+        'RO': 'ROU',    // Romania
+        'SM': 'SMR',    // San Marino
+        'UA': 'UKR',    // Ukraine
+        'SK': 'SVK',    // Slovakia
+        'SI': 'SVN',    // Slovenia
+        'VA': 'VAT'     // holy city of Vatican
+    };
+
+
+    /**
      * Draws the map of Europe
      */ 
     this.DrawMap = function () {
@@ -133,87 +210,11 @@ function EuropeMap(_options) {
                          .attr('class', 'graticule')
                          .attr('d', path);
             lines.exit().remove();
-
-            /**
-             * Zoom on country function
-             * DISCLAMER: change this function for selecting multiple countries 
-             */ 
-            function zoomOnCountry(d, multipleSelection) {
-                var xCoord, yCoord;
-                
-                if (d && centered !== d) {
-                    /**
-                     * some modification zooming for France it has
-                     * islands around the world and that's why it
-                     * doesn't zoom in the center of the country
-                     */ 
-                    var addX = d.id == "FRA" ? 60 : 0;
-                    var addY = d.id == "FRA" ? -50 : 0;
-                    
-                    var centroid = path.centroid(d);
-                    xCoord = centroid[0] + addX;
-                    yCoord = centroid[1] + addY;
-                    scaleKoef = 2.5;
-                    centered = d;
-                } else {
-                    xCoord = width / 2;
-                    yCoord = height / 2;
-                    scaleKoef = 1;
-                    centered = null;
-
-                }
-                /**
-                 *  multipleSelection if false: 
-                 *  Add/remove the .active class tag to the selected country
-                 *  Zoom in to / out from selected country
-                 */
-                if (!multipleSelection) {
-                    
-                    container.selectAll(".country")
-                             .classed("active", centered && function (d) { return d === centered });
-                    
-                    // make the transition to that country
-                    container.transition()
-                         .duration(1000)
-                         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + scaleKoef + ")translate(" + -xCoord + "," + -yCoord + ")")
-                         .each("end", setZoomLevel);
-
-                } else {
-                    var selectedCountry = container.select("#" + d.id);
-                    selectedCountry.classed("active", selectedCountry.attr("class") != "country active");
-                    
-                    /**
-                     * TODO: Must implement the zoom function to the countries
-                     */ 
-                    scaleKoef = 1;
-                }
-                
-                /**
-                 * set the zoom level and the display of 
-                 * .city and .city-label objects
-                 */
-                function setZoomLevel() {
-                    var trans = d3.transform(container.attr("transform"));
-                    zoom.scale(scaleKoef);
-                    zoom.translate(trans.translate);
-                    if (centered) {
-                        $(".city").show();
-                        $(".city-label").show();
-                    } else {
-                        $(".city").hide();
-                        $(".city-label").hide();
-                    }
-                    // show clusters for jobs
-                    if (jsonPoints) {
-                        self.PointClustering();
-                    }
-                }
-            }
+            
             
             /**
              * This part adds the city and country labels.
              */ 
-
             // set the city location as points
             container.append("path")
                      .datum(cities)
@@ -250,6 +251,85 @@ function EuropeMap(_options) {
                     return "";
                 }
             });
+
+            /**
+             * Zoom on country function
+             * DISCLAMER: change this function for selecting multiple countries 
+             */ 
+            function zoomOnCountry(d, multipleSelection) {
+                var xCoord, yCoord;
+                
+                if (d && centered !== d) {
+                    /**
+                     * some modification placing France label: France 
+                     * has islands around the world and that's why it
+                     * doesn't move in the center of the country
+                     */ 
+                    var addX = d.id == "FRA" ? 60 : 0;
+                    var addY = d.id == "FRA" ? -50 : 0;
+                    
+                    var centroid = path.centroid(d);
+                    xCoord = centroid[0] + addX;
+                    yCoord = centroid[1] + addY;
+                    scaleKoef = 2.5;
+                    centered = d;
+                } else {
+                    xCoord = width / 2;
+                    yCoord = height / 2;
+                    scaleKoef = 1;
+                    centered = null;
+
+                }
+                /**
+                 *  multipleSelection if false: 
+                 *  Add/remove the .active class tag to the selected country
+                 *  Zoom in to / out from selected country
+                 */
+                if (!multipleSelection) {
+                    container.selectAll(".country")
+                             .classed("active", centered && function (d) { return d === centered });
+                    
+                    // make the transition to that country
+                    container.transition()
+                         .duration(1000)
+                         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + scaleKoef + ")translate(" + -xCoord + "," + -yCoord + ")")
+                         .each("end", setZoomLevel);
+                } 
+                /**
+                 * multiSelection if true:
+                 * implement the zooming/paning functionality
+                 */ 
+                else {
+                    var selectedCountry = container.select("#" + d.id);
+                    selectedCountry.classed("active", selectedCountry.attr("class") != "country active");
+                    
+                    /**
+                     * TODO: Must implement the zoom function to the countries
+                     */ 
+                    scaleKoef = 1;
+                }
+                
+                /**
+                 * set the zoom level and the display of 
+                 * .city and .city-label objects
+                 */
+                function setZoomLevel() {
+                    var trans = d3.transform(container.attr("transform"));
+                    zoom.scale(scaleKoef);
+                    zoom.translate(trans.translate);
+                    if (centered) {
+                        $(".city").show();
+                        $(".city-label").show();
+                    } else {
+                        $(".city").hide();
+                        $(".city-label").hide();
+                    }
+                    // show clusters for jobs
+                    if (jsonPoints) {
+                        self.PointClustering();
+                    }
+                }
+            }
         });
     };
     

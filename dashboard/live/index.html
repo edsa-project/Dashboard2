@@ -3,8 +3,9 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" href="../../common/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../../common/css/jquery-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/bootstrap-tagsinput.css" />
     <link rel="stylesheet" type="text/css" href="../../common/css/index.css" />
     <link rel="stylesheet" type="text/css" href="../../common/css/europe.css" />
     <title>EDSA Dashboard</title>
@@ -55,15 +56,18 @@
                 <!-- Search options -->
                 <div class="options">
 
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="skill-search" placeholder="Type a skill">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Search</button>
-                            <button class="btn btn-default" type="button" onclick="toggleAdvOptions()">
+                    <div class="skill-search-container">
+                        <span id="span-skill-search"><input type="text" class="form-control" id="skill-search" placeholder="Type a skill" /></span>
+                        <span id="span-skill-search-buttons">
+                            <button class="btn btn-default pull-right" type="button">Search</button>
+                        </span>
+                        <span id="span-skill-search-buttons">
+                            <button class="btn btn-default pull-right" type="button" onclick="toggleAdvOptions()">
                                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                                 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" data-value="right" id="showOptions"></span>
                             </button>
                         </span>
+                       
                     </div>
 
                     <!-- advance search container -->
@@ -80,7 +84,7 @@
                                         <span class="selected-location">Country</span>
                                         <span class="caret-right"></span>
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="location_dropdown">
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="location_dropdown">
                                         <li><a href="#">Country</a></li>
                                         <li><a href="#">City</a></li>
                                         <li><a href="#">Location</a></li>
@@ -96,11 +100,11 @@
 
                             <div class="col-xs-8 col-sm-8 col-lg-9">
                                 <div type="text" class="dropdown" id="options-time">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="location_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="time_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                         <span class="selected-time">Month</span>
                                         <span class="caret-right"></span>
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="location_dropdown">
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="time_dropdown">
                                         <li><a href="#">Quarter</a></li>
                                         <li><a href="#">Month</a></li>
                                         <li><a href="#">Week</a></li>
@@ -157,11 +161,13 @@
     <script src="../../common/libs/js/ext/topojson.min.js"></script>
 
     <script src="../../common/libs/js/ext/jquery.min.js"></script>
-    <script src="../../common/libs/js/ext/enscroll-0.6.2.min.js"></script>
     <script src="../../common/libs/js/ext/bootstrap.min.js"></script>
+    <script src="../../common/libs/js/ext/typeahead.bundle.js"></script>
+    <script src="../../common/libs/js/ext/bootstrap-tagsinput.js"></script>
 
     <script src="../../public/js/graphs/europeMap.js"></script>
     <script src="../../dashboard/live/js/index.js"></script>
+    <script src="../../dashboard/live/js/autocomplete.js"></script>
 </body>
 
 

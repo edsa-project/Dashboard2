@@ -2,7 +2,11 @@
 }
 
 .body-container {
-    padding-top: 40px;
+    padding-top: 60px;
+}
+
+h1 {
+    text-align:center;
 }
 
 #map-container {
@@ -23,10 +27,15 @@
     padding-top: 10px;
 }
 
-.btn.btn-default.dropdown-toggle {
+.dropdown-toggle {
     width: 100px;
     display: block;
     text-align: left !important;
+}
+
+.dropdown-menu {
+    width:     100px !important;
+    min-width: 100px !important;
 }
 
 .selected-location,
@@ -49,43 +58,77 @@
     margin-right:-5px;
 }
 
-
-/**********************
- * Scroll style - TODO check if needed
- */
-
 #info-container {
     overflow: auto;
     width: auto;
     height: 740px;
+    padding: 0 5px;
 }
 
-.tracking {
-    width: 10px;
-    background: rgba(0, 0, 0, 0);
-    margin-right: 2px;
-    border-radius: 10px;
-    -webkit-transition: background 250ms linear;
-    transition: background 250ms linear;
+.pull-right {
+    margin-left: 10px;
 }
 
-.tracking:hover,
-.tracking.dragging {
-    background: #d9d9d9; 
-    background: rgba(0, 0, 0, 0.15);
+#span-skill-search-buttons {
+    display: table-cell;
 }
 
-.handling {
-    width: 7px;
-    right: 0;
-    background: #999;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 7px;
-    -webkit-transition: width 250ms;
-    transition: width 250ms;
+#span-skill-search {
+    display: table-cell;
+    position: relative;
+    top: -13px;
+    width: 100%;
 }
 
-.tracking:hover .handling,
-.tracking.dragging .handling {
-    width: 10px;
+#skill-search,
+.bootstrap-tagsinput {
+    width: 100%;
 }
+
+.tt-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    list-style: none;
+    font-size: 14px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    background-clip: padding-box;
+    cursor: pointer;
+}
+
+.tt-suggestion {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #333333;
+    white-space: nowrap;
+}
+
+.tt-dataset .tt-suggestion:hover,
+.tt-cursor {
+    font-weight: 600;
+    background-color: #F2F6F8;
+}
+
+.tag {
+    border-radius: 20px;
+    font-size:     12px;
+}
+
+.tt-input {
+    width: 100%;
+}
+

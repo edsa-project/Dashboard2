@@ -22,10 +22,10 @@ function toggleAdvOptions() {
     
     // change the size of the info container
     var info_container = $('#info-container');
-    if (info_container.height() != 625) {
-        info_container.animate({ height: 625 }, 600);
+    if (info_container.height() != 725) {
+        info_container.animate({ height: 725 }, 600);
     } else {
-        info_container.animate({ height: 730 }, 700);
+        info_container.animate({ height: 830 }, 700);
     }
 }
 
@@ -50,6 +50,7 @@ $(function () {
  */ 
 var europe = new EuropeMap({
     mapContainer: "#map-container",
+    timelineContainer: "#timeline-container",
     multipleSelection: false
 });
 europe.DrawMap();

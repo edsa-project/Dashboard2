@@ -5,23 +5,42 @@
  * with topojson (need node.js): npm install -g topojson
  */ 
 
+
+/**
+ * Generates the map of Europe and optionally the timeline.
+ * @param {Object} [_options] - The options for constructing the map.
+ * @property {string} [_options.mapContainer = null] - The identifier for the map container.
+ * @property {string} [_options.timelineContainer = null] - The identifier for the timeline container.
+ * @property {Object} [_options.gridSize] - Object containing the min and max grid size used for clustering and visualizing data.
+ * @property {boolean} [_options.multipleSelection = false] - Flag for allowing multiple country selection.
+ * @property {Object} [_options.margin] - Object containing the top, left, bottom, right margin size.
+ */ 
 function EuropeMap(_options) {
+    /**
+     * The options used at map initialization.
+     */ 
     var options = $.extend({
         mapContainer: null,
+        timelineContainer: null,
         gridSize: { min: 15, max: 45 },
         multipleSelection: false,
         margin: { top: 20, left: 20, bottom: 20, right: 20 }
     }, _options);
     
     /**
-     * The parameters used.
+     * The parameters storage. They are used for manipulating with SVG objects 
+     * in multiple functions.
      */ 
-    var container = undefined,
-        projection = undefined,
-        zoom = undefined,
-        quadtree = undefined,
-        radiusScale = undefined,
-        gridScale = undefined;
+    var mapContainer      = undefined,
+        timelineContainer = undefined,
+        projection        = undefined,
+        zoom              = undefined,
+        quadtree          = undefined,
+        radiusScale       = undefined,
+        gridScale         = undefined,
+        x                 = undefined,
+        xAxis             = undefined,
+        brush             = undefined;
     
     /**
      * The shown points
@@ -30,7 +49,7 @@ function EuropeMap(_options) {
         clusterPoints = [];
     
     /**
-     * Zoom properties
+     * Zoom properties (don't allow mousewheel or double-click zooming)
      */ 
     var scaleKoef = 1;
     
@@ -112,60 +131,47 @@ function EuropeMap(_options) {
 
 
     /**
-     * Draws the map of Europe
+     * Draws the map of Europe (optional: timeline, if container is specified)
      */ 
     this.DrawMap = function () {
         var self = this;
         
-        // get the width and the height of the container
-        var totalWidth = $(options.mapContainer).width(),
-            totalHeight = $(options.mapContainer).height(),
-            width = totalWidth - options.margin.left - options.margin.right,
-            height = totalHeight - options.margin.top - options.margin.bottom,
+        // get the width and the height of the map container
+        var mapTotalWidth  = $(options.mapContainer).width(),
+            mapTotalHeight = $(options.mapContainer).height(),
+            mapWidth       = mapTotalWidth - options.margin.left - options.margin.right,
+            mapHeight      = mapTotalHeight - options.margin.top - options.margin.bottom,
             centered;
-        
-        // the alpha-3 ISO abbreviatons of the non-eu European countries
+
+        // the alpha-3 ISO codes of the Non-EU European countries
         var nonEU = ['ALB', 'AND', 'BLR', 'BIH', 'GEO', 'ISL', 'UNK', 'LIE', 
             'MKD', 'MDA', 'MNE', 'NOR', 'SMR', 'SRB', 'CHE', 'UKR', 'VAT'];
         
         // set the projection function from spherical coords to euclidean
         projection = d3.geo.vanDerGrinten()
-                     .center([5, 55])
-                     .scale(800)
-                     .translate([width / 2, height / 2]);
+                       .center([5, 55])
+                       .scale(750)
+                       .translate([mapWidth / 2, mapHeight / 2]);
         
-        // set the path function
         var path = d3.geo.path()
-               .pointRadius(1)
-               .projection(projection);
+                     .pointRadius(1)
+                     .projection(projection);
         
+        // graticules at 10 degrees 
         var graticule = d3.geo.graticule()
                           .step([10, 10]);
 
         zoom = d3.behavior.zoom()
-                 .scaleExtent([1, 8])
                  .on("zoom", onZoom);
         
         gridScale = d3.scale.linear()
                       .domain([1, 3])
                       .rangeRound([options.gridSize.max, options.gridSize.min]);
-        
-        // the zoom behaviour
-        // it also creates the boundary limits
-        function onZoom() {
-            var t = d3.event.translate,
-                s = scaleKoef;
-            var h = height / 4;
-            t[0] = Math.min(width / height * (s - 1) + 100*s, Math.max(width * (1 - s) - 100*s, t[0]));
-            t[1] = Math.min(h * (s - 1) + 2*h / 3 * s, Math.max(height * (1 - s) - 2*h / 3 * s, t[1]));
-            zoom.translate(t);
-            container.attr("transform", "translate(" + t + ")scale(" + s + ")");
-        }
-        
-        // create the svg container
+
+        // create the svg map container
         var svg = d3.select(options.mapContainer).append("svg")
-                .attr("width", totalWidth)
-                .attr("height", totalHeight)
+                .attr("width", mapTotalWidth)
+                .attr("height", mapTotalHeight)
                 .append("g")
                 .attr("transform", "translate(" + options.margin.left + ", " + options.margin.top + ")")
                 .call(zoom)
@@ -176,12 +182,57 @@ function EuropeMap(_options) {
                 .on("dblclick.zoom", null);
         
         svg.append("rect")
-           .attr("fill", "#FFFFFF")
-           .attr("width", width)
-           .attr("height", height);
+           .attr("fill", "transparent")
+           .attr("width", mapWidth)
+           .attr("height", mapHeight);
         
-        container = svg.append("g");
+        mapContainer = svg.append("g");
         
+        // construct the timeline 
+        if (options.timelineContainer) {
+            
+            // get the width and height of the timeline container
+            var timelineTotalWidth = $(options.timelineContainer).width(),
+                timelineTotalHeight = $(options.timelineContainer).height(),
+                timelineWidth = timelineTotalWidth - options.margin.left - options.margin.right,
+                timelineHeight = timelineTotalHeight - options.margin.top - options.margin.bottom;
+
+            // timeline axis domain and range 
+            var x = d3.time.scale().range([0, timelineWidth])
+                                   .domain([new Date(2016, 4, 1), new Date(2016, 4, 7)]);           // TODO change to appropriate domain (dynamically, min time - max time)
+                                                                     // longest interval approx. 3 months
+            // create the svg timeline container
+            xAxis = d3.svg.axis().scale(x).orient("bottom");
+
+            var svg = d3.select(options.timelineContainer).append("svg")
+                        .attr("width", timelineTotalWidth)
+                        .attr("height", timelineTotalHeight)
+                        .append("g")
+                        .attr("transform", "translate(" + options.margin.left + ", 0)");
+            
+            svg.append("rect")
+               .attr("fill", "transparent")
+               .attr("width", timelineWidth)
+               .attr("height", timelineHeight);
+
+            timelineContainer = svg.append("g");
+
+            timelineContainer.append("g")
+                             .attr("class", "x axis")
+                             .attr("transform", "translate(0, " + (timelineTotalHeight - options.margin.bottom) + ")")
+                             .call(xAxis);
+
+            brush = d3.svg.brush().x(x).on("brush", changeView);
+
+            timelineContainer.append("g")
+                             .attr("class", "x brush")
+                             .call(brush)
+                             .selectAll("rect")
+                             .attr("y", -6)
+                             .attr("height", timelineTotalHeight - 15);
+        }
+        
+
         // load the europe data
         d3.json("dashboard/data/map/europe.json", function (error, europe) {
              if (error) { throw error; }
@@ -191,7 +242,7 @@ function EuropeMap(_options) {
             var cities = topojson.feature(europe, europe.objects.cities);
             
             // set the country features
-            container.selectAll(".country")
+            mapContainer.selectAll(".country")
                      .data(countries.features)
                      .enter().append("path")
                      .attr("class", function (d) {
@@ -202,10 +253,10 @@ function EuropeMap(_options) {
                      .attr("d", path)
                      .on('click', function (d) { zoomOnCountry(d, options.multipleSelection); });
             
-            //container.selectAll(".country-hidden").remove();
+            //mapContainer.selectAll(".country-hidden").remove();
             
             // graticule lines 
-            var lines = container.selectAll('.graticule').data([graticule()]);
+            var lines = mapContainer.selectAll('.graticule').data([graticule()]);
             lines.enter().append('path')
                          .attr('class', 'graticule')
                          .attr('d', path);
@@ -215,42 +266,43 @@ function EuropeMap(_options) {
             /**
              * This part adds the city and country labels.
              */ 
+
             // set the city location as points
-            container.append("path")
-                     .datum(cities)
-                     .attr("d", path)
-                     .attr("class", "city");
+            mapContainer.append("path")
+                        .datum(cities)
+                        .attr("d", path)
+                        .attr("class", "city");
             
             // set the city label/names 
-            container.selectAll(".city-label")
-                     .data(cities.features)
-                     .enter().append("text")
-                     .attr("class", "city-label")
-                     .attr("transform", function (d) { return "translate(" + projection(d.geometry.coordinates) + ")"; })
-                     .attr("dy", ".35em")
-                     .text(function (d) { return d.properties.name; })
-                     .attr("x", function (d) { return d.geometry.coordinates[0] > -1 ? 3 : -3; })
-                     .style("text-anchor", function (d) { return d.geometry.coordinates[0] > -1 ? "start" : "end"; });
+            mapContainer.selectAll(".city-label")
+                        .data(cities.features)
+                        .enter().append("text")
+                        .attr("class", "city-label")
+                        .attr("transform", function (d) { return "translate(" + projection(d.geometry.coordinates) + ")"; })
+                        .attr("dy", ".35em")
+                        .text(function (d) { return d.properties.name; })
+                        .attr("x", function (d) { return d.geometry.coordinates[0] > -1 ? 3 : -3; })
+                        .style("text-anchor", function (d) { return d.geometry.coordinates[0] > -1 ? "start" : "end"; });
             
             
             // set the country label
-            container.selectAll(".country-label")
-                     .data(countries.features)
-                     .enter().append("text")
-                     .attr("class", function (d) { return "country-label " + d.id; })
-                     .attr("transform", function (d) {
-                var addX = d.id == "FRA" ?  65 : 0;
-                var addY = d.id == "FRA" ? -60 : 0;
-                return "translate(" + (path.centroid(d)[0] + addX) + ", " + (path.centroid(d)[1] + addY) + ")";
-            })
-                     .attr("dy", ".35em")
-                     .text(function (d) {
-                if (nonEU.indexOf(d.id) === -1) {
-                    return d.properties.name;
-                } else {
-                    return "";
-                }
-            });
+            mapContainer.selectAll(".country-label")
+                        .data(countries.features)
+                        .enter().append("text")
+                        .attr("class", function (d) { return "country-label " + d.id; })
+                        .attr("transform", function (d) {
+                            var addX = d.id == "FRA" ?  65 : 0;
+                            var addY = d.id == "FRA" ? -60 : 0;
+                            return "translate(" + (path.centroid(d)[0] + addX) + ", " + (path.centroid(d)[1] + addY) + ")";
+                        })
+                        .attr("dy", ".35em")
+                        .text(function (d) {
+                            if (nonEU.indexOf(d.id) === -1) {
+                                return d.properties.name;
+                            } else {
+                                return "";
+                            }
+                        });
 
             /**
              * Zoom on country function
@@ -274,8 +326,8 @@ function EuropeMap(_options) {
                     scaleKoef = 2.5;
                     centered = d;
                 } else {
-                    xCoord = width / 2;
-                    yCoord = height / 2;
+                    xCoord = mapWidth / 2;
+                    yCoord = mapHeight / 2;
                     scaleKoef = 1;
                     centered = null;
 
@@ -286,13 +338,13 @@ function EuropeMap(_options) {
                  *  Zoom in to / out from selected country
                  */
                 if (!multipleSelection) {
-                    container.selectAll(".country")
+                    mapContainer.selectAll(".country")
                              .classed("active", centered && function (d) { return d === centered });
                     
                     // make the transition to that country
-                    container.transition()
+                    mapContainer.transition()
                          .duration(1000)
-                         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + scaleKoef + ")translate(" + -xCoord + "," + -yCoord + ")")
+                         .attr("transform", "translate(" + mapWidth / 2 + "," + mapHeight / 2 + ")scale(" + scaleKoef + ")translate(" + -xCoord + "," + -yCoord + ")")
                          .each("end", setZoomLevel);
                 } 
                 /**
@@ -314,7 +366,7 @@ function EuropeMap(_options) {
                  * .city and .city-label objects
                  */
                 function setZoomLevel() {
-                    var trans = d3.transform(container.attr("transform"));
+                    var trans = d3.transform(mapContainer.attr("transform"));
                     zoom.scale(scaleKoef);
                     zoom.translate(trans.translate);
                     if (centered) {
@@ -331,22 +383,41 @@ function EuropeMap(_options) {
                 }
             }
         });
+
+        // the zoom behaviour (panning and boundary limits)
+        function onZoom() {
+            var t = d3.event.translate,
+                s = scaleKoef;
+            var h = mapHeight / 4;
+            t[0] = Math.min(mapWidth / mapHeight * (s - 1) + 90 * s, Math.max(mapWidth * (1 - s) - 90 * s, t[0]));
+            t[1] = Math.min(h * (s - 1) + 3 * h / 4 * s, Math.max(mapHeight * (1 - s) - 3 * h / 4 * s, t[1]));
+            zoom.translate(t);
+            mapContainer.attr("transform", "translate(" + t + ")scale(" + s + ")");
+        }
+
+        // when timeline brush changes
+        function changeView() {
+            // TODO write the code for showing clusters
+            // console.log(brush.extent());
+        }
     };
     
     /**
-     * Draws the circles/data on the map
+     * Stores the points and draws the clusters.
      * @param {Array.<Array.<Number>>} _points - The array containing the points.
      */ 
     this.DrawPoints = function (_points) {
         if (!_points) { throw "Must contain array of coordinates!"; }
-        var disappearMs = 250;
-        var appearMs = 500;
         
         // save the current array of points
         jsonPoints = _points; 
         this.PointClustering();
     };
     
+    /**
+     * Creates the clusters and draws them on the map.
+     * TODO: Check if function still works and change the functionality
+     */ 
     this.PointClustering = function () {
         
         // get the width and the height of the container
@@ -409,7 +480,7 @@ function EuropeMap(_options) {
         
         
         // add the clusters on the map
-        var clusters = container.selectAll(".clusterPoint")
+        var clusters = mapContainer.selectAll(".clusterPoint")
                  .data(clusterPoints);
         
         clusters.enter().append("circle")

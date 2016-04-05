@@ -91,7 +91,7 @@
                                             <li><a href="#">Location</a></li>
                                         </ul>
                                     </div>-->
-                                    <input type="text" class="form-control" id="location-search" placeholder="Type a city name" />
+                                <input type="text" class="form-control" id="location-search" placeholder="Type a city name" />
 
                                 <!--</div>-->
                             </div>
@@ -138,7 +138,10 @@
 
             <!-- Map container -->
             <div class="col-lg-8">
-                <div id="map-container"></div>
+                <div class="map">
+                    <div id="map-container"></div>
+                    <div id="timeline-container"></div>
+                </div>
             </div>
         </div>
 
@@ -153,24 +156,26 @@
         </div>
 
     </div>
-    <!-- Page Footer - EDSA information -->
-    <footer class="footer" role="contentinfo">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-1"></div>
-                <div class="col-lg-10">
-                    <img class="footer-eu-picture" src="../../docs/pics/eu-commission.png" />
-                    <p>
-                        This project has received funding from the <br />
-                        European Union's Horizon 2020<br />
-                        research and innovation programme<br />
-                        under grant agreement No 643937
-                    </p>
+        <!-- Page Footer - EDSA information -->
+        <footer class="footer" role="contentinfo">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-10">
+                        <img class="footer-eu-picture" src="../../docs/pics/eu-commission.png" />
+                        <p>
+                            This project has received funding from the <br />
+                            European Union's Horizon 2020<br />
+                            research and innovation programme<br />
+                            under grant agreement No 643937
+                        </p>
+                    </div>
+                    <div class="col-lg-1"></div>
                 </div>
-                <div class="col-lg-1"></div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    
+    
 
     <!-- Scripts -->
     <!-- d3js -->

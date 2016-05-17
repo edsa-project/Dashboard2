@@ -1,0 +1,113 @@
+﻿/**********************
+ * Main style 
+ */
+
+html,
+body {
+    height: 100%;
+    background: #f2f2f2;
+}
+
+.body-container {
+    min-height: 100%;
+    height: auto !important;
+
+    padding-top: 50px;
+    padding-bottom: 150px;
+}
+
+.navbar {
+    background-color: #FFFFFF;
+    border-bottom-width: 2px;
+    border-bottom-color: #730000;
+}
+    .navbar a {
+        color: #111717 !important;
+        font-weight: 500;
+        -webkit-transition: all 0.2s ease-out;
+        -moz-transition:    all 0.2s ease-out;
+        -o-transition:      all 0.2s ease-out;
+        -ms-transition:     all 0.2s ease-out;
+        transition:         all 0.2s ease-out;
+    }
+    .navbar a:hover {
+        background-color: #d2d8e0 !important;
+        
+    }
+    .navbar .active a,
+    .navbar a.active {
+        background-color: #730100 !important;
+        color:            #FFFFFF !important;
+    }
+
+.footer {
+    position: relative;
+    display: block;
+    clear: both;
+    margin-top: -150px;
+    height: 150px;
+    padding-top: 20px;
+    color: #ffffff;
+    font-size: 12px;
+    font-family: 'Lato', sans-serif;
+    background-color: #506c6f;
+}
+
+    .footer .container-fluid {
+        padding-right:  15px;
+        padding-left:   15px;
+        padding-top:    30px; 
+        padding-bottom: 20px;
+    }
+
+.footer-eu-picture {
+    float: left;
+    margin-right: 10px;
+}
+
+/*****************************
+ * Page style
+ */
+
+.main-title {
+    background-color: #730100;
+    color: #FFFFFF;
+}
+
+.search-options {
+    background-color: #E6E6E6;
+}
+
+.main-body {
+    padding-top: 20px;
+}
+
+/*****************************
+ * Utility and helpers
+ */
+
+.btn-default,
+.btn-default:hover,
+.btn-default:active,
+.btn-default:focus {
+    color:            #FFFFFF !important;
+    outline-color:    #981616 !important;
+    background-color: #730100 !important;
+}
+
+.center {
+    text-align: center;
+}
+
+.empty {
+    height: 20px;
+}
+
+.boundbox {
+    width: 100%;
+    color: #FFFFFF;
+    text-align: center;
+    padding-top:    5px;
+    padding-bottom: 5px;
+    background-color: #696868;
+}

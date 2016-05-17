@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="common/css/jquery-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="public/js/datatables/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="common/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="common/css/bootstrap-tagsinput.css" />
+
+    <!-- Custom styles -->
+    <link rel="stylesheet" type="text/css" href="dashboard/live/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="dashboard/live/css/infoContainers.css" />
+    <link rel="stylesheet" type="text/css" href="dashboard/live/css/searchOptions.css" />
+
+    <link rel="stylesheet" type="text/css" href="dashboard/live/css/loader.css" />
+
+    <link rel="stylesheet" type="text/css" href="dashboard/live/css/graphs/europe.css" />
+
+    <title>EDSA Dashboard</title>
+</head>
+<body>
+    <!-- Body container -->
+    <div class="container-fluid body-container">
+        <!-- Navbar -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#dashboard-options" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">EDSA Dashboard</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="dashboard-options">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/policymakers">Policy Makers</a></li>
+                        <li class="active"><a href="/jobseekers">Job Seekers</a></li>
+                        <!--<li><a href="#">Data Science Experts</a></li>-->
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+
+
+        <!-- Page Title and description -->
+        <div class="row main-title">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h2 class="center">EDSA DASHBOARD | JOB SEEKERS</h2>
+            </div>
+        </div>
+
+        <div class="row search-options">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <!-- Search options -->
+                <div class="options">
+                    <p><h4>SEARCH JOB TRENDS</h4></p>
+                    <div class="skill-search-container">
+                        <span id="span-skill-search">
+                            <input type="text" class="form-control" id="skill-search" placeholder="Type a skill" />
+                        </span>
+                        <span id="span-skill-search-buttons">
+                            <button class="btn btn-default pull-right" type="button" onclick="searchOptions('Policy Makers')">Search</button>
+                        </span>
+                        <span id="span-skill-search-buttons">
+                            <button class="btn btn-default pull-right" type="button" onclick="toggleAdvOptions()">
+                                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" data-value="right" id="showOptions"></span>
+                            </button>
+                        </span>
+
+                    </div>
+
+                    <!-- advance search container -->
+                    <div class="form-horizontal additional-options" style="display:none;">
+
+                        <!-- row containing the location and time interval options -->
+                        <div class="form-group">
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
+                                <label class="control-label">Location:</label>
+                            </div>
+                            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-11">
+                                <input type="text" class="form-control" id="location-search" placeholder="Type a city name" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Page body -->
+        <div class="row main-body">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                <div id="analytics-basic-statistics">
+                    <div class="box-body">
+                        <table>
+                            <tr>
+                                <th>Statistics</th>
+                                <th>Value</th>
+                            </tr>
+                            <tr>
+                                <td>Job Posts</td>
+                                <td><div id="infoStatJobPosts"></div></td>
+                            </tr>
+                            <tr>
+                                <td>Locations</td>
+                                <td><div id="infoStatLocations"></div></td>
+                            </tr>
+                            <tr>
+                                <td>Skills</td>
+                                <td><div id="infoStatSkills"> </div></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div id="query-container"></div>
+                <div id="info-container"></div>
+            </div>
+
+
+            <!-- Map container -->
+            <div class="col-xs-12 col-md-12 col-md-12 col-lg-8">
+                <div class="map">
+                    <div id="map-load-container">
+                        <div class="map-load-inner">
+                            <label>●</label>
+                            <label>●</label>
+                            <label>●</label>
+                            <label>●</label>
+                            <label>●</label>
+                            <label>●</label>
+                        </div>
+                    </div>
+                    <div id="map-container">
+                        <div id="zoom-container">
+                            <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                    <div id="timeline-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- analytics container -->
+        <div class="analytics-container">
+            <div id="jobseekers-info">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <h2 class="center">TOP JOBS</h2>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div id="jobseekers-top-jobs" style="width: 100%; height: 400px; margin: 0 auto">
+                                    <table id="top-jobs" class="display" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Job Title</th>
+                                                <th>Posting Date</th>
+                                                <th>Hiring Organization</th>
+                                                <th>Skills</th>
+                                                <th>Location</th>
+                                                <th>Country</th>
+                                            </tr>
+                                        </thead>
+
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row empty"></div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <h2 class="center">SUGGESTED MATERIALS</h2>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!--overflow:auto;-->
+                                <div id="jobseekers-suggested-materials" style="width: 100%; height: 600px; margin: 0 auto;">
+                                    <table id="suggested-materials" class="display" style="width: 100%; height: 100%;" cellpadding="0" cellspacing="0" border="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Lecture Title</th>
+                                                <th>Lecture Description</th>
+                                                <th>Lecture Url</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>3rd Annual European Semantic Web Conference (ESWC), Budva 2006</td>
+                                                <td>Topics of interest to the conference include (but are not restricted to): Ontology Management (e.g. creation, evolution, evaluation) Ontology Alignment (e.g. mapping, matching, merging, mediation and reconciliation) Ontology Learning and Metadata Generation (including e.g. HLT and ML approaches) Multimedia and Semantic Web Semantic Annotation of Data Semantic Web Trust, Privacy, Security and Intellectual Property Rights Semantic Web Rules and Query Languages Reasoning on the Web (e.g. scalability, fuzziness, distribution) Searching, Querying, Visualizing, Navigating and Browsing the Semantic Web Personalization and User Modelling User Interfaces and Semantic Web Semantic Grid and Middleware Semantic Web Services (e.g. description, discovery, invocation, composition) Semantic Web-based Knowledge Management (e.g. Semantic Desktop, Knowledge Portals) Semantic Web for e-Business, e-Culture, e-Government, e-Health, e-Learning, e-Science Database Technologies for the Semantic Web Data Semantics and Web Semantics Semantic Interoperability Semantic Web Mining.</td>
+                                                <td>eswc06_budva</td>
+                                                <td>recorded</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--<div style="width:100%;height:50px"></div>-->
+                            </div>
+                        </div>
+                        <!--<div style="width:100%;height:50px"></div>-->
+                    </div>
+                </div>
+                <div class="row empty"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Footer - EDSA information -->
+    <footer class="footer" role="contentinfo">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                    <img class="footer-eu-picture" src="../../docs/pics/eu-commission.png" />
+                    <p>
+                        This project has received funding from the <br />
+                        European Union's Horizon 2020<br />
+                        research and innovation programme<br />
+                        under grant agreement No 643937
+                    </p>
+                </div>
+                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <!-- Scripts -->
+    <script src="common/libs/js/ext/jquery.min.js"></script>
+    <script src="common/libs/js/ext/bootstrap.min.js"></script>
+    <script src="common/libs/js/ext/typeahead.bundle.js"></script>
+    <script src="common/libs/js/ext/bootstrap-tagsinput.js"></script>
+    <script type="text/javascript" charset="utf8" src="public/js/datatables/jquery.dataTables.js"></script>
+
+    <!-- Highchart -->
+    <script src="common/libs/js/ext/highcharts.js"></script>
+    <script src="common/libs/js/ext/highcharts-3d.js"></script>
+    <script src="common/libs/js/ext/highcharts-more.js"></script>
+
+    <!-- d3js -->
+    <script src="common/libs/js/ext/d3.js"></script>
+    <script src="common/libs/js/ext/d3.geo.projection.v0.min.js"></script>
+    <script src="common/libs/js/ext/topojson.min.js"></script>
+
+    <script src="public/js/graphs/europeMap.js"></script>
+    <script src="dashboard/live/js/graphCreation/mapCreation.js"></script>
+
+    <script src="dashboard/live/js/autocomplete.js"></script>
+    <script src="dashboard/live/js/options.js"></script>
+
+    <script src="dashboard/live/js/dataLoadSearch/load.js"></script>
+    <script src="dashboard/live/js/dataLoadSearch/loadJobSeekers.js"></script>
+    <script src="dashboard/live/js/dataLoadSearch/searchJobSeekers.js"></script>
+
+
+    <!-- Google Analytics -->
+    <script src="dashboard/live/js/googleAnalytics.js"></script>
+
+</body>
+
+
+
+</html>

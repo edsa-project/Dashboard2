@@ -1,0 +1,145 @@
+﻿/*********************************
+ * Map
+ */
+
+.svg-map {
+    z-index: 1;
+}
+
+.svg-map .graticule {
+    fill: none;
+    stroke: #777;
+    stroke-width: .5px;
+    stroke-opacity: .5;
+}
+
+.svg-map .country {
+    fill: #BDD09F;
+    stroke: white;
+    stroke-width: 0.5px;
+}
+
+    .svg-map .country:hover {
+        fill: #98B071;
+    }
+
+    .svg-map .country.notvisible {
+        stroke: #777;
+        stroke-width: 0.5px;
+        stroke-dasharray: 2, 4;
+        pointer-events: none;
+    }
+
+    .svg-map .country.active,
+    .svg-map .country.active:hover {
+        fill: #668D3C;
+    }
+
+.svg-map .notvisible {
+    fill: none;
+}
+
+.svg-map .country-label {
+    fill: #493829;
+    fill-opacity: .5;
+    font-size: 10px;
+    font-weight: 300;
+    text-anchor: middle;
+}
+
+.svg-map .city {
+    fill: white;
+    stroke: black;
+    stroke-width: .5px;
+    display: none;
+}
+
+.svg-map .city-label {
+    font-size: 3px;
+    display: none;
+}
+
+.svg-map path {
+    fill: none;
+}
+
+.svg-map text,
+.svg-map .city,
+.svg-map .graticule {
+    pointer-events: none;
+}
+
+/*********************************
+* Clusters
+*/
+
+.svg-map .jobCluster {
+    fill: #730100;
+    fill-opacity: .75;
+}
+
+    .svg-map .jobCluster:hover {
+        fill: #290000;
+    }
+
+/********************************
+ * Timescroll
+ */
+
+.axis text {
+    font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1px;
+}
+
+.brush .extent {
+    stroke:  #021F06;
+    stroke-opacity: .30;
+    fill:    #021F06;
+    fill-opacity: .50;
+}
+
+.resize path {
+    fill: #021F06;
+    fill-opacity: .60;
+}
+
+/********************************
+ * Graph-Tooltip
+ */
+
+.graph-tooltip {
+    font: 12px sans-serif;
+    position: absolute;
+    color: white;
+    height: auto;
+    width: auto;
+    padding: 5px 5px 5px 5px;
+    margin: 5px 5px 5px 5px;
+    border-radius: 5px;
+    max-width: 400px;
+    background-color: rgba(0, 52, 102, 0.8);
+    pointer-events: none;
+}
+
+#zoom-container {
+    position: absolute;
+    top: 20px;
+}
+    #zoom-container span.glyphicon-zoom-in {
+        font-size: 30px;
+        color: darkgray;
+
+    }
+    #zoom-container span.glyphicon-zoom-in.active {
+        color: #000000;
+    }
+
+.tooltip {
+    font-size: 10px;
+}

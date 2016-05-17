@@ -1,35 +1,66 @@
-﻿
-/**
- * Functionality of the autocomplete skill search.
+﻿/**
+ * Functionality for the autocomplete search.
  * 
  * Uses typeahead.js: https://twitter.github.io/typeahead.js/
  * and Bootstrap Tags Input: http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
  */ 
 
-$(function () {
-    // skillset gathered from the provided data map_dump.csv
-    var skillset = ['Python', 'Advanced computing', 'Programming', 'Computational systems', 'Coding', 'Cloud computing', 'Databases', 
-        'Data management', 'Data engineering', 'Data mining', 'Data formats', 'Linked data', 'Information extraction', 'Stream processing', 
-        'Enterprise process', 'Business intelligence', 'Data anonymisation', 'Semantics', 'Schema', 'Data licensing', 'Data quality', 
-        'Data governance', 'Data science', 'Big data', 'Open data', 'Machine learning', 'Social network analysis', 'Inference', 'Reasoning', 
-        'Process mining', 'Linear algebra', 'Calculus', 'Mathematics', 'Statistics', 'Probability', 'RStudio', 'Data analytics', 
-        'Data analysis', 'Data visualisation', 'Infographics', 'Interaction', 'Data mapping', 'Data stories', 'Data journalism', 'D3js', 
-        'Tableau'];
-    
-    // skills typeahead and tags 
-    var skills = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        local: $.map(skillset, function (skill) { return { name: skill }; })
-    }); skills.initialize();
-    
-    $("#skill-search").tagsinput({
-        itemValue: "name",
-        typeaheadjs: {
-            name: "skills",
-            displayKey: 'name',
-            source: skills.ttAdapter()
+function LoadAutocomplete() {
+    /**
+     * Get all skills from the database and create a bootstrap
+     * tags input autocomplete.
+     */ 
+    $.ajax({
+        type: "GET",
+        url: "http://pankretas.ijs.si:8040/get_all_skills",
+        dataType: 'jsonp',
+        cache: false,
+        success: function (json) {
+            var skillset = json.skills;
+            // skills typeahead and tags 
+            var skills = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: $.map(skillset, function (skill) { return { name: skill.value }; })
+            }); skills.initialize();
+            
+            $("#skill-search").tagsinput({
+                itemValue: "name",
+                typeaheadjs: {
+                    name: "skills",
+                    displayKey: 'name',
+                    source: skills.ttAdapter()
+                }
+            });
         }
     });
-
-});
+    
+    /**
+     * Get all locations from the database and create a bootstrap
+     * tags input autocomplete.
+     */
+    $.ajax({
+        type: "GET",
+        url: "http://pankretas.ijs.si:8040/get_all_locations",
+        dataType: 'jsonp',
+        cache: false,
+        success: function (json) {
+            var locationset = json.locations;
+            // locations typeahead and tags 
+            var locations = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: $.map(locationset, function (location) { return { name: location.value }; })
+            }); locations.initialize();
+            
+            $("#location-search").tagsinput({
+                itemValue: "name",
+                typeaheadjs: {
+                    name: "locations",
+                    displayKey: 'name',
+                    source: locations.ttAdapter()
+                }
+            });
+        }
+    });
+}

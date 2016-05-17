@@ -3,11 +3,15 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" href="../../common/css/jquery-ui.min.css">
-    <link rel="stylesheet" type="text/css" href="../../common/css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../../common/css/bootstrap-tagsinput.css" />
-    <link rel="stylesheet" type="text/css" href="../../common/css/index.css" />
-    <link rel="stylesheet" type="text/css" href="../../common/css/europe.css" />
+    <!-- Outer styles -->
+    <link rel="stylesheet" type="text/css" href="common/css/jquery-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="common/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="common/css/bootstrap-tagsinput.css" />
+
+    <!-- Custom styles -->
+    <link rel="stylesheet" type="text/css" href="dashboard/live/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="dashboard/live/css/infoContainers.css" />
+
     <title>EDSA Dashboard</title>
 </head>
 <body>
@@ -24,173 +28,80 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">EDSA Dashboard</a>
+                    <a class="navbar-brand active" href="/">EDSA Dashboard</a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="dashboard-options">
                     <ul class="nav navbar-nav">
-                        <li><a href="#">Policy Makers</a></li>
-                        <li><a href="#">Job Seekers</a></li>
-                        <li><a href="#">Data Science Experts</a></li>
+                        <li><a href="/policymakers">Policy Makers</a></li>
+                        <li><a href="/jobseekers">Job Seekers</a></li>
+                        <!--<li><a href="#">Data Science Experts</a></li>-->
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
 
 
-
         <!-- Page Title and description -->
-        <div class="row">
+        <div class="row main-title">
             <div class="col-lg-12">
-                <h1>Policy Makers</h1>
-                <!-- Quick description -->
-                <p>Description</p>
+                <h1 class="center">EDSA DASHBOARD</h1>
             </div>
         </div>
-
+        <div class="row empty"></div>
+        
         <!-- Page body -->
         <div class="row">
-            <div class="col-lg-4">
-
-                <!-- Search options -->
-                <div class="options">
-
-                    <div class="skill-search-container">
-                        <span id="span-skill-search"><input type="text" class="form-control" id="skill-search" placeholder="Type a skill" /></span>
-                        <span id="span-skill-search-buttons">
-                            <button class="btn btn-default pull-right" type="button">Search</button>
-                        </span>
-                        <span id="span-skill-search-buttons">
-                            <button class="btn btn-default pull-right" type="button" onclick="toggleAdvOptions()">
-                                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" data-value="right" id="showOptions"></span>
-                            </button>
-                        </span>
-
-                    </div>
-
-                    <!-- advance search container -->
-                    <div class="form-horizontal additional-options" style="display:none;">
-
-                        <!-- row containing the location and time interval options -->
-                        <div class="form-group">
-                            <div class="col-xs-4 col-sm-4 col-lg-3">
-                                <label class="control-label">City:</label>
-                            </div>
-                            <div class="col-xs-8 col-sm-8 col-lg-9">
-                                <!--<div class="input-group">
-                                    <div type="text" class="input-group-btn" id="options-location">
-                                        <button class="btn btn-default dropdown-toggle" type="button" id="location_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                            <span class="selected-location">Country</span>
-                                            <span class="caret-right"></span>
-                                        </button>
-                                        <ul class="dropdown-menu" role="menu" aria-labelledby="location_dropdown">
-                                            <li><a href="#">Country</a></li>
-                                            <li><a href="#">City</a></li>
-                                            <li><a href="#">Location</a></li>
-                                        </ul>
-                                    </div>-->
-                                <input type="text" class="form-control" id="location-search" placeholder="Type a city name" />
-
-                                <!--</div>-->
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-xs-4 col-sm-4 col-lg-3">
-                                <label class="control-label">Time interval:</label>
-                            </div>
-
-                            <div class="col-xs-8 col-sm-8 col-lg-9">
-                                <div type="text" class="dropdown" id="options-time">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="time_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        <span class="selected-time">Month</span>
-                                        <span class="caret-right"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="time_dropdown">
-                                        <li><a href="#">Quarter</a></li>
-                                        <li><a href="#">Month</a></li>
-                                        <li><a href="#">Week</a></li>
-                                        <li><a href="#">Day</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div id="info-container">
-                    <h1>New Scrolling Window</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a justo erat, volutpat hendrerit dolor. Sed urna nibh, dapibus at egestas non, vulputate ut quam. Morbi a erat tristique tellus varius venenatis. Aenean lacinia sem eget turpis fringilla commodo. Sed lorem nisi, viverra a interdum nec, varius eu enim. Donec ornare, nunc quis eleifend iaculis, nulla eros mollis tellus, quis faucibus risus odio non lectus. Maecenas ac velit non metus rhoncus commodo. Nunc ligula est, ultricies sed mattis sed, dapibus at arcu. Maecenas lacinia nisl ut sem bibendum ac condimentum purus facilisis. Curabitur ut nibh lobortis libero interdum vehicula vel quis nulla.</p>
-
-                    <p>Suspendisse et massa urna. Donec eu lorem nec felis dapibus aliquam viverra in quam. Suspendisse ultrices, nisi ac venenatis porttitor, erat turpis dapibus augue, sed rutrum nunc ante sed enim. Aliquam et tempus mi. Nullam malesuada, nunc a eleifend pretium, justo lorem tempus justo, id adipiscing dolor ipsum sed velit. Maecenas odio massa, feugiat vel sodales ut, placerat at quam. Cras viverra diam vitae diam elementum vitae aliquet erat tincidunt. Quisque fringilla neque in lacus tempor cursus. Curabitur eget nulla et nisi dignissim tempor vel non risus. Mauris ac ipsum metus, a auctor massa. Nunc eros ante, ullamcorper a mollis nec, aliquam sed est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a justo erat, volutpat hendrerit dolor. Sed urna nibh, dapibus at egestas non, vulputate ut quam. Morbi a erat tristique tellus varius venenatis. Aenean lacinia sem eget turpis fringilla commodo. Sed lorem nisi, viverra a interdum nec, varius eu enim. Donec ornare, nunc quis eleifend iaculis, nulla eros mollis tellus, quis faucibus risus odio non lectus. Maecenas ac velit non metus rhoncus commodo. Nunc ligula est, ultricies sed mattis sed, dapibus at arcu. Maecenas lacinia nisl ut sem bibendum ac condimentum purus facilisis. Curabitur ut nibh lobortis libero interdum vehicula vel quis nulla.</p>
-
-                    <p>Suspendisse et massa urna. Donec eu lorem nec felis dapibus aliquam viverra in quam. Suspendisse ultrices, nisi ac venenatis porttitor, erat turpis dapibus augue, sed rutrum nunc ante sed enim. Aliquam et tempus mi. Nullam malesuada, nunc a eleifend pretium, justo lorem tempus justo, id adipiscing dolor ipsum sed velit. Maecenas odio massa, feugiat vel sodales ut, placerat at quam. Cras viverra diam vitae diam elementum vitae aliquet erat tincidunt. Quisque fringilla neque in lacus tempor cursus. Curabitur eget nulla et nisi dignissim tempor vel non risus. Mauris ac ipsum metus, a auctor massa. Nunc eros ante, ullamcorper a mollis nec, aliquam sed est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a justo erat, volutpat hendrerit dolor. Sed urna nibh, dapibus at egestas non, vulputate ut quam. Morbi a erat tristique tellus varius venenatis. Aenean lacinia sem eget turpis fringilla commodo. Sed lorem nisi, viverra a interdum nec, varius eu enim. Donec ornare, nunc quis eleifend iaculis, nulla eros mollis tellus, quis faucibus risus odio non lectus. Maecenas ac velit non metus rhoncus commodo. Nunc ligula est, ultricies sed mattis sed, dapibus at arcu. Maecenas lacinia nisl ut sem bibendum ac condimentum purus facilisis. Curabitur ut nibh lobortis libero interdum vehicula vel quis nulla.</p>
-
-                    <p>Suspendisse et massa urna. Donec eu lorem nec felis dapibus aliquam viverra in quam. Suspendisse ultrices, nisi ac venenatis porttitor, erat turpis dapibus augue, sed rutrum nunc ante sed enim. Aliquam et tempus mi. Nullam malesuada, nunc a eleifend pretium, justo lorem tempus justo, id adipiscing dolor ipsum sed velit. Maecenas odio massa, feugiat vel sodales ut, placerat at quam. Cras viverra diam vitae diam elementum vitae aliquet erat tincidunt. Quisque fringilla neque in lacus tempor cursus. Curabitur eget nulla et nisi dignissim tempor vel non risus. Mauris ac ipsum metus, a auctor massa. Nunc eros ante, ullamcorper a mollis nec, aliquam sed est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-                </div>
-            </div>
-
-
-            <!-- Map container -->
-            <div class="col-lg-8">
-                <div class="map">
-                    <div id="map-container"></div>
-                    <div id="timeline-container"></div>
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10">
+                <div id="aboutEdsaDashboard" align="justify">
+                    <h3 class="center">ABOUT EDSA DASHBOARD</h3>
+                    <p>The ‘Age of Data’ continues to thrive, with data being produced from all industries at a phenomenal rate that introduces numerous challenges regarding the collection, storage and analysis of this data. To address this problem, the European Data Science Academy (EDSA) will establish a virtuous learning production cycle for Data Science.</p>
+                    <p>The EDSA consortium is a well-balanced European consortium containing 9 partners from 6 European countries (UK, Germany, Sweden, Slovenia, The Netherlands and France). Partners represent universities (OU, KTH, SOUTHAMPTON, TU/e), research institutions (FRAUNHOFER, JSI) and SMEs (ODI, IDEXLAB SAS, Persontyle Limited) covering different forms of organisations.</p>
+                    <p>The European Data Science Academy (EDSA) designs curricula for data science training and data science education across the European Union (EU). </p>
+                    <p>Throughout the project, the curricula and learning resources will be guided and evaluated by experts in both Data Science and pedagogy to ensure they meet the needs of the Data Science community. The sections below outline some of the activities that are being carried out to help meet these goals.</p>
+                    <p>EDSA Dashboard provides Policy Makers, Job Seekers and Experts with a set of analytics options related to Demand Analysis in Data Science domain: </p>
+                    <ul>
+                        <li>a) analyse the required sector specific skillsets for data scientists across the main industrial sectors in Europe; </li>
+                        <li>b) view data science trends depending on location and skillset</li>
+                        <li>and c) explore data science related materials, courses and videolectures developed by EDSA project. </li>
+                    </ul>
                 </div>
             </div>
         </div>
-
-        <!-- analytics container -->
-        <div class="analytics-container">
-            <div class="row">
-                <div class="col-lg-4">
-                </div>
-                <div class="col-lg-8">
-                </div>
-            </div>
-        </div>
-
+        <div class="col-lg-1"></div>
     </div>
-        <!-- Page Footer - EDSA information -->
-        <footer class="footer" role="contentinfo">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-1"></div>
-                    <div class="col-lg-10">
-                        <img class="footer-eu-picture" src="../../docs/pics/eu-commission.png" />
-                        <p>
-                            This project has received funding from the <br />
-                            European Union's Horizon 2020<br />
-                            research and innovation programme<br />
-                            under grant agreement No 643937
-                        </p>
-                    </div>
-                    <div class="col-lg-1"></div>
+
+    <!-- Page Footer - EDSA information -->
+    <footer class="footer" role="contentinfo">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-10">
+                    <img class="footer-eu-picture" src="../../docs/pics/eu-commission.png" />
+                    <p>
+                        This project has received funding from the <br />
+                        European Union's Horizon 2020<br />
+                        research and innovation programme<br />
+                        under grant agreement No 643937
+                    </p>
                 </div>
+                <div class="col-lg-1"></div>
             </div>
-        </footer>
-    
-    
+        </div>
+    </footer>
+
+
 
     <!-- Scripts -->
     <!-- d3js -->
-    <script src="../../common/libs/js/ext/d3.js"></script>
-    <script src="../../common/libs/js/ext/d3.geo.projection.v0.min.js"></script>
-    <script src="../../common/libs/js/ext/topojson.min.js"></script>
+    <script src="common/libs/js/ext/jquery.min.js"></script>
+    <script src="common/libs/js/ext/bootstrap.min.js"></script>
 
-    <script src="../../common/libs/js/ext/jquery.min.js"></script>
-    <script src="../../common/libs/js/ext/bootstrap.min.js"></script>
-    <script src="../../common/libs/js/ext/typeahead.bundle.js"></script>
-    <script src="../../common/libs/js/ext/bootstrap-tagsinput.js"></script>
+    <!-- Google Analytics -->
+    <script src="dashboard/live/js/googleAnalytics.js"></script>
 
-    <script src="../../public/js/graphs/europeMap.js"></script>
-    <script src="../../dashboard/live/js/index.js"></script>
-    <script src="../../dashboard/live/js/autocomplete.js"></script>
 </body>
 
 

@@ -234,13 +234,13 @@ function EuropeMap(_options) {
                 .call(zoom)
                 // remove the mousewheel/double click zoom
                 .on("mousewheel.zoom", null)
-                .on("wheel.zoom", null)
                 .on("DOMMouseScroll.zoom", null)
-                .on("dblclick.zoom", null)
-                .append("g")
+                .on("wheel.zoom", null)
+                .on("dblclick.zoom", null);
+       var hiddenLayer = svg.append("g")
                 .attr("transform", "translate(" + options.margin.left + ", " + options.margin.top + ")");
 
-        mapContainer = svg.append("g");
+        mapContainer = hiddenLayer.append("g");
 
         // load the europe data
         d3.json("dashboard/data/map/europe.json", function (error, europe) {
@@ -327,7 +327,7 @@ function EuropeMap(_options) {
         //-----------------------------------
 
         // position the zoom container
-        $("#zoom-container").css({ "left": (mapTotalWidth - 20) + "px" });
+        $("#zoom-container-map").css({ "left": (mapTotalWidth - 20) + "px" });
         // add the tooltip 
         $(".glyphicon-zoom-in").tooltip({
             container: "#map-container",
@@ -352,7 +352,7 @@ function EuropeMap(_options) {
 
         // the zoom behaviour (panning and boundary limits)
         function onZoom() {
-            var sFlag = scale != d3.event.scale;
+            var sFlag = (d3.event.scale % 1) - (scale % 1) < 0;
             trans = d3.event.translate;
             scale = d3.event.scale;
             var h = mapHeight / 4;
@@ -360,25 +360,23 @@ function EuropeMap(_options) {
             trans[1] = Math.min(h * (scale - 1) + 3 * h / 4 * scale, Math.max(mapHeight * (1 - scale) - 3 * h / 4 * scale, trans[1]));
             mapContainer.attr("transform", "translate(" + trans + ")scale(" + scale + ")");
             zoom.translate(trans);
-
-            // show city labels and location
-            if (scale < 2.5) {
-                $(".city").hide();
-                $(".city-label").hide();
-                $(".country-label").show();
-            } 
-            else {
-                $(".city").show();
-                $(".city-label").show();
-                $(".country-label").hide();
-            }
             
-            console.log(brush.extent());
-            if (sFlag && selectedJobs.length != 0) {
-                createJobClusters();
+            // show city labels and location
+            if (zoomEnableFlag) {
+                if (scale < 2.5) {
+                    $(".city").hide();
+                    $(".city-label").hide();
+                    $(".country-label").show();
+                } else {
+                    $(".city").show();
+                    $(".city-label").show();
+                    $(".country-label").hide();
+                }
+                if (zoomEnableFlag && sFlag && selectedJobs.length != 0) {
+                    createJobClusters();
+                }
             }
         }
-
     };
 
     /**
@@ -754,6 +752,6 @@ function EuropeMap(_options) {
         clearTimeout(resizeTimerMap);
         resizeTimerMap = setTimeout(function () {
             self.redraw();
-        }, 400);
+        }, 1000);
     });
 }

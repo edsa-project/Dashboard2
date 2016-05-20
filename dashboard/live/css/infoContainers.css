@@ -63,6 +63,7 @@
     position: relative;
 }
 
+#analytics-chart-jobs-by-dates,
 #analytics-chart-skills-by-frequency,
 #analytics-chart-location-by-frequency {
     height: 400px;

@@ -52,6 +52,14 @@
  * Specific histogram style
  */
 
+.histogram.histogram-date .bar {
+  fill: #506C6F;
+}
+
+.histogram.histogram-date .bar:hover {
+  fill: #95A3A4 ;
+}
+
 .histogram.histogram-skill .bar {
   fill: #730100;
 }

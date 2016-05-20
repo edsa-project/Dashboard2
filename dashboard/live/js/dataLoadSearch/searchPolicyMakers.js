@@ -70,73 +70,79 @@ function searchSuccess(json) {
     
     // construct the sorted list of lobs and time
     var jobsByDates = [];
+    var jobDateNameFreq = [];
     for (var DateN = 0; DateN < dateKeys.length; DateN++) {
         var dkeyJPT = dateKeys[DateN];
         var dKey = dateJPSortedKeys[dkeyJPT];
+        jobDateNameFreq.push({ name: new Date(Date.parse(dKey)), value: jobsDateFreq[dKey] });
         jobsByDates.push([Date.parse(dKey), jobsDateFreq[dKey]]);
     }
-    
+    console.log(jobDateNameFreq);
+
     var numberOfJobs = jobsAllInfo.length;
     // update the statistics for job posts
     $('#infoStatJobPosts').html("<b>" + numberOfJobs + "</b>");
     
     // TODO: creates the histogram for the date - number of jobs data
-    
-    // TODO: replace this histogram with one from d3
-    //////////////////////////////////////////////////
-    $('#analytics-chart-jobs-by-dates').highcharts({
-        chart: {
-            zoomType: 'x'
-        },
-        title: {
-            text: 'Job Posts By Dates'
-        },
-        xAxis: {
-            type: 'datetime',
+    // create the histogram
+    var dataset = { name: "Job Posts By Dates", yAttribute: "Number of jobs", data: jobDateNameFreq };
+    dateHistogram.setData(dataset);
 
-        },
-        yAxis: {
-            title: {
-                text: 'Numbef of jobs'
-            }
-        },
-        legend: {
-            enabled: false
-        },
-        plotOptions: {
-            area: {
-                fillColor: {
-                    linearGradient: {
-                        x1: 0,
-                        y1: 0,
-                        x2: 0,
-                        y2: 1
-                    },
-                    stops: [
-                        [0, Highcharts.getOptions().colors[2]],
-                        [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0).get('rgba')]
-                    ]
-                },
-                marker: {
-                    radius: 2
-                },
-                lineWidth: 1,
-                color: Highcharts.getOptions().colors[2],
-                states: {
-                    hover: {
-                        lineWidth: 1
-                    }
-                },
-                threshold: null
-            }
-        },
+    //// TODO: replace this histogram with one from d3
+    ////////////////////////////////////////////////////
+    //$('#analytics-chart-jobs-by-dates').highcharts({
+    //    chart: {
+    //        zoomType: 'x'
+    //    },
+    //    title: {
+    //        text: 'Job Posts By Dates'
+    //    },
+    //    xAxis: {
+    //        type: 'datetime',
+
+    //    },
+    //    yAxis: {
+    //        title: {
+    //            text: 'Numbef of jobs'
+    //        }
+    //    },
+    //    legend: {
+    //        enabled: false
+    //    },
+    //    plotOptions: {
+    //        area: {
+    //            fillColor: {
+    //                linearGradient: {
+    //                    x1: 0,
+    //                    y1: 0,
+    //                    x2: 0,
+    //                    y2: 1
+    //                },
+    //                stops: [
+    //                    [0, Highcharts.getOptions().colors[2]],
+    //                    [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0).get('rgba')]
+    //                ]
+    //            },
+    //            marker: {
+    //                radius: 2
+    //            },
+    //            lineWidth: 1,
+    //            color: Highcharts.getOptions().colors[2],
+    //            states: {
+    //                hover: {
+    //                    lineWidth: 1
+    //                }
+    //            },
+    //            threshold: null
+    //        }
+    //    },
         
-        series: [{
-                type: 'column',
-                name: 'jobs',
-                data: jobsByDates
-            }]
-    });
+    //    series: [{
+    //            type: 'column',
+    //            name: 'jobs',
+    //            data: jobsByDates
+    //        }]
+    //});
     //////////////////////////////////////////////////
 
     //-------------------------------------------------------

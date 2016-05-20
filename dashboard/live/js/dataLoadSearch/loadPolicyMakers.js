@@ -8,66 +8,80 @@ $.ajax({
     dataType: 'jsonp',
     cache: false,
     success: function (json) {
-        $('#analytics-chart-jobs-by-dates').highcharts({
-            chart: {
-                type: 'spline',
-                zoomType: 'x'
-            },
-            title: {
-                text: 'Job Posts By Dates'
-            },
-            xAxis: {
-                type: 'datetime'
-            },
-            yAxis: {
-                title: {
-                    text: 'Numbef of jobs'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            plotOptions: {
-                spline: {
-                    marker: {
-                        enabled: true
-                    }
-                }
-            },
-            plotOptions: {
-                area: {
-                    fillColor: {
-                        linearGradient: {
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: 1
-                        },
-                        stops: [
-                            [0, Highcharts.getOptions().colors[2]],
-                            [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0).get('rgba')]
-                        ]
-                    },
-                    marker: {
-                        radius: 2
-                    },
-                    lineWidth: 1,
-                    color: Highcharts.getOptions().colors[2],
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    threshold: null
-                }
-            },
+        
+        var DateArray = json.get_number_of_jobs_by_dates;
+        var jobDateNameFreq = [];
+        
+        var numberOfDates = DateArray.length;
+        for (var DateN = 1; DateN < numberOfDates; DateN++) {
+            var jobDate = DateArray[DateN];
+            jobDateNameFreq.push({ name: new Date(jobDate[0]), value: jobDate[1] });
+        }
+        
+        // create the histogram
+        var dataset = { name: "Job Posts By Dates", yAttribute: "Number of jobs", data: jobDateNameFreq };
+        dateHistogram.setData(dataset);
+
+    //    $('#analytics-chart-jobs-by-dates').highcharts({
+    //        chart: {
+    //            type: 'spline',
+    //            zoomType: 'x'
+    //        },
+    //        title: {
+    //            text: 'Job Posts By Dates'
+    //        },
+    //        xAxis: {
+    //            type: 'datetime'
+    //        },
+    //        yAxis: {
+    //            title: {
+    //                text: 'Number of jobs'
+    //            }
+    //        },
+    //        legend: {
+    //            enabled: false
+    //        },
+    //        plotOptions: {
+    //            spline: {
+    //                marker: {
+    //                    enabled: true
+    //                }
+    //            }
+    //        },
+    //        plotOptions: {
+    //            area: {
+    //                fillColor: {
+    //                    linearGradient: {
+    //                        x1: 0,
+    //                        y1: 0,
+    //                        x2: 0,
+    //                        y2: 1
+    //                    },
+    //                    stops: [
+    //                        [0, Highcharts.getOptions().colors[2]],
+    //                        [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0).get('rgba')]
+    //                    ]
+    //                },
+    //                marker: {
+    //                    radius: 2
+    //                },
+    //                lineWidth: 1,
+    //                color: Highcharts.getOptions().colors[2],
+    //                states: {
+    //                    hover: {
+    //                        lineWidth: 1
+    //                    }
+    //                },
+    //                threshold: null
+    //            }
+    //        },
             
-            series: [{
-                    type: 'column',
-                    name: 'jobs',
-                    data: json.get_number_of_jobs_by_dates
-                }]
-        });
+    //        series: [{
+    //                type: 'column',
+    //                name: 'jobs',
+    //                data: json.get_number_of_jobs_by_dates
+    //            }]
+    //    });
 
     }
 });

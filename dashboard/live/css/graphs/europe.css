@@ -127,16 +127,16 @@
     pointer-events: none;
 }
 
-#zoom-container {
+#zoom-container-map {
     position: absolute;
     top: 20px;
 }
-    #zoom-container span.glyphicon-zoom-in {
+    #zoom-container-map span.glyphicon-zoom-in {
         font-size: 30px;
         color: darkgray;
 
     }
-    #zoom-container span.glyphicon-zoom-in.active {
+    #zoom-container-map span.glyphicon-zoom-in.active {
         color: #000000;
     }
 
